@@ -1,10 +1,11 @@
+import { object } from 'prop-types';
 import './App.css';
 import { useState } from 'react'
 import env from 'react-dotenv'
 
 const App = () => {
   // creating array of city information and city for input
-  const [dataArray, setDataArray] = useState([])
+  const [dataObject, setDataObject] = useState([])
   const [city, setCity] = useState('')
 
   // handling input change and capitalizing first letter of inputted city for aesthetic purpose
@@ -27,15 +28,24 @@ const App = () => {
       const res = await response.json()
 
       // setting city information array with json'ed response
-      setDataArray(res)
+      setDataObject(res)
     } catch (err) { console.log(err) }
   }
 
   // handling city clear button to clear city input and city information output
   const handleCityClear = () => {
     setCity('')
-    setDataArray([])
+    setDataObject([])
   }
+
+  let dataArray = []
+  const getCityInfo = dataObject => {
+    // await dataObject
+    if(dataObject) dataArray.concat(dataObject)
+  }
+  getCityInfo(dataObject)
+  console.log(dataArray[0])
+  console.log(typeof(dataArray))
 
   return (
     <div>
@@ -43,9 +53,10 @@ const App = () => {
       <p>{capitalizeFirst(city)}</p>
 
       {/* checking if array of city information contains something and outputting it */}
-      {dataArray.length !== 0 &&
-        <div><pre>{JSON.stringify(dataArray, null, 4)}</pre></div>
-      }
+      {/* {dataObject.length !== 0 &&
+        <div><pre>{JSON.stringify(dataObject, null, 4)}</pre></div>
+      } */}
+      <div></div>
     </div>
 
   )
