@@ -1,0 +1,14 @@
+.city-info-wrapper {
+    display: flex;
+    gap: 150px;
+}
+
+.city-info-wrapper pre {
+    width: max-content;
+}
+
+.condition-wrapper {
+    display: flex;
+    align-items: center;
+    height: 24px;
+}
