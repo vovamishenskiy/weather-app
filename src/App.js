@@ -1,11 +1,17 @@
-import './App.css';
-import { useState } from 'react'
+import './App.css'
 import env from 'react-dotenv'
+import { useState } from 'react'
+import HourForecast from './components/HourForecast'
+import CityInformation from './components/CityInformation'
 
 const App = () => {
   // creating object of city information and city for input
   const [dataObject, setDataObject] = useState({})
   const [cityInput, setCityInput] = useState('')
+  // TODO: language choice button and output app in selected language
+  const lat = /[а-яА-я]/gi
+  let english = true
+  if (cityInput.match(lat)) english = false
 
   // handling input change and capitalizing first letter of inputted city for aesthetic purpose
   const handleCityChange = (event) => setCityInput(event.target.value)
@@ -16,20 +22,22 @@ const App = () => {
   // handling button click - asynchronously fetching data from api url using city from input
   const handleBtnClick = async () => {
     try {
-      const response = await fetch(`${env.BASE_URL}/current.json?key=${env.KEY}&q=${cityInput}`, { // TODO: language choice and translation of elements based on chosen language
+      const response = await fetch(`${env.BASE_URL}/forecast.json?key=${env.KEY}&q=${cityInput}`, { // TODO: language choice and translation of elements based on chosen language
         method: 'GET',
         headers: {
           Accept: 'application/json',
         },
       })
 
+      // checking response status, if 400 then alert user that there's an error in input and abort further actions to avoid errors
+      if (response.status === 400 & english) return alert('Specify city')
+      if (response.status === 400 & !english) return alert('Укажите город')
+
       // turning request response into json 
       const res = await response.json()
 
       // setting city information object with json'ed response
       setDataObject(res)
-
-      console.log(res.location.name, res.location.country, res.location.localtime, res.current.temp_c)
     } catch (err) { console.log(err) }
   }
 
@@ -39,12 +47,31 @@ const App = () => {
     setDataObject({})
   }
 
-  const location = dataObject.location
-  const current = dataObject.current
-
   return (
-    <div>
-      <input value={cityInput} onChange={handleCityChange}></input> <button onClick={handleBtnClick}>get</button><button onClick={handleCityClear}>clear</button>
+    <div className='content-wrapper'>
+      <h1>Weather</h1>
+      <div className='input-wrapper'>
+        {english && Object.keys(dataObject).length === 0 && <h2>Enter your city</h2>}
+        {!english && Object.keys(dataObject).length === 0 && <h2>Введите Ваш город</h2>}
+        {Object.keys(dataObject).length === 0 && <input value={cityInput} onChange={handleCityChange}></input>}
+        {cityInput && english &&
+          <div className='input-button-group'>
+            {Object.keys(dataObject).length === 0 &&
+              <button onClick={handleBtnClick}>get</button>
+            }
+            <button onClick={handleCityClear}>clear</button>
+          </div>
+        }
+
+        {cityInput && !english &&
+          <div className='input-button-group russian'>
+            {Object.keys(dataObject).length === 0 &&
+              <button onClick={handleBtnClick}>получить</button>
+            }
+            <button onClick={handleCityClear}>очистить</button>
+          </div>
+        }
+      </div>
 
       {/* checking if city information object doesn't have values to output city input */}
       {Object.keys(dataObject).length === 0 &&
@@ -54,29 +81,12 @@ const App = () => {
       {/* checking if city information object has values and outputting it */}
       {Object.keys(dataObject).length !== 0 &&
         <div className='city-info-wrapper'>
-          <pre>{JSON.stringify(dataObject, null, 3)}</pre>
-          <div className='styled-city-info'>
-            <h2>Location</h2>
-            <p>{location.name}, {location.country}</p>
-            <p>Current time: {location.localtime}</p>
-            <p>Last updated weather: {current.last_updated}</p>
-            <h2>Current weather:</h2>
-            <p>Temperature: {current.temp_c}&deg;C</p>
-            <p>Feels like: {Math.floor(current.feelslike_c)} - {Math.ceil(current.feelslike_c)}&deg;C</p>
-            <div className='condition-wrapper'>
-              <span>Condition: {current.condition.text}</span>
-              <img src={current.condition.icon} alt={`${current.condition.text} icon`}></img>
-            </div>
-            <p>Wind: {current.wind_kph} km/h ({Math.ceil(0.277778 * current.wind_kph)} m/s), {current.wind_dir}</p>
-            <p>Wind gusts: up to {current.gust_kph} km/h ({Math.ceil(0.277778 * current.gust_kph)} m/s)</p>
-            <p>Pressure: {Math.ceil(current.pressure_mb * 0.75006)} mm Hg</p>
-            <p>Visibility: {current.vis_km} km</p>
-          </div>
+          {/* <pre>{JSON.stringify(dataObject, null, 3)}</pre> */}
+          <CityInformation dataObject={dataObject} cityInput={cityInput} />
+          <HourForecast dataObject={dataObject} />
         </div>
       }
-      <div></div>
     </div>
-
   )
 }
 
