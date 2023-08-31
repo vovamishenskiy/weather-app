@@ -1,6 +1,6 @@
 import './App.css'
-import env from 'react-dotenv'
 import { useState } from 'react'
+import axios from 'axios'
 import HourForecast from './components/HourForecast'
 import CityInformation from './components/CityInformation'
 
@@ -22,7 +22,18 @@ const App = () => {
   // handling button click - asynchronously fetching data from api url using city from input
   const handleBtnClick = async () => {
     try {
-      const response = await fetch(`${env.BASE_URL}/forecast.json?key=${env.KEY}&q=${cityInput}`, { // TODO: language choice and translation of elements based on chosen language
+      const sendCity = await fetch('http://127.0.0.1:4242/getCityInput', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(cityInput)
+      }).then(function (response) {
+        console.log(response)
+        return response
+      })
+
+      const response = await fetch('http://127.0.0.1:4242/getForecast', {
         method: 'GET',
         headers: {
           Accept: 'application/json',
