@@ -1,6 +1,5 @@
 import './App.css'
 import { useState } from 'react'
-import axios from 'axios'
 import HourForecast from './components/HourForecast'
 import CityInformation from './components/CityInformation'
 
@@ -13,24 +12,15 @@ const App = () => {
   let english = true
   if (cityInput.match(lat)) english = false
 
-  // handling input change and capitalizing first letter of inputted city for aesthetic purpose
-  const handleCityChange = (event) => setCityInput(event.target.value)
-  const capitalizeFirst = cityInput => {
-    return cityInput.charAt(0).toUpperCase() + cityInput.slice(1)
-  }
-
   // handling button click - asynchronously fetching data from api url using city from input
-  const handleBtnClick = async () => {
+  const handleBtnClick = async (event) => {
     try {
-      const sendCity = await fetch('http://127.0.0.1:4242/getCityInput', {
+      event.preventDefault()
+      const newCity = { cityInput }
+      await fetch('http://127.0.0.1:4242/getCityInput', {
         method: 'POST',
-        headers: {
-          Accept: 'application/json',
-        },
-        body: JSON.stringify(cityInput)
-      }).then(function (response) {
-        console.log(response)
-        return response
+        headers: { 'Content-Type': 'application/JSON' },
+        body: JSON.stringify(newCity)
       })
 
       const response = await fetch('http://127.0.0.1:4242/getForecast', {
@@ -52,6 +42,12 @@ const App = () => {
     } catch (err) { console.log(err) }
   }
 
+  // handling input change and capitalizing first letter of inputted city for aesthetic purpose
+  const handleCityChange = (event) => setCityInput(event.target.value)
+  const capitalizeFirst = cityInput => {
+    return cityInput.charAt(0).toUpperCase() + cityInput.slice(1)
+  }
+
   // handling city clear button to clear city input and city information output
   const handleCityClear = () => {
     setCityInput('')
@@ -64,7 +60,11 @@ const App = () => {
       <div className='input-wrapper'>
         {english && Object.keys(dataObject).length === 0 && <h2>Enter your city</h2>}
         {!english && Object.keys(dataObject).length === 0 && <h2>Введите Ваш город</h2>}
-        {Object.keys(dataObject).length === 0 && <input value={cityInput} onChange={handleCityChange}></input>}
+        {Object.keys(dataObject).length === 0 && 
+          <form onSubmit={handleBtnClick}>
+            <input value={cityInput} onChange={handleCityChange}></input>
+          </form>
+        }
         {cityInput && english &&
           <div className='input-button-group'>
             {Object.keys(dataObject).length === 0 &&

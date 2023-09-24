@@ -6,9 +6,12 @@ const CityInformation = ({ dataObject, cityInput }) => {
     const location = dataObject.location
     const current = dataObject.current
 
+    if(english && (!location || !current)) alert('Specify city')
+    if(!english && (!location || !current)) alert('Утоните город')
+
     return (
         <div>
-            {english &&
+            {english && location && 
                 <div className='styled-city-info'>
                     <h2>Location</h2>
                     <p>{location.name}, {location.country}</p>
@@ -31,7 +34,7 @@ const CityInformation = ({ dataObject, cityInput }) => {
                 </div>
             }
 
-            {!english &&
+            {!english && location &&
                 <div className='styled-city-info'>
                     <h2>Местоположение</h2>
                     <p>{location.name}, {location.country}</p>
@@ -54,7 +57,6 @@ const CityInformation = ({ dataObject, cityInput }) => {
                 </div>
             }
         </div>
-
     )
 }
 
