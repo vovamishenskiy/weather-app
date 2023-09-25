@@ -2,15 +2,17 @@ import './App.css'
 import { useState } from 'react'
 import HourForecast from './components/HourForecast'
 import CityInformation from './components/CityInformation'
+const gb = require('./img/gb.png')
+const rus = require('./img/rus.png')
 
 const App = () => {
   // creating object of city information and city for input
   const [dataObject, setDataObject] = useState({})
   const [cityInput, setCityInput] = useState('')
-  // TODO: language choice button and output app in selected language
-  const lat = /[а-яА-я]/gi
-  let english = true
-  if (cityInput.match(lat)) english = false
+
+  // creating simple language state and changing it using button later in code
+  const [english, setLanguage] = useState(true)
+  const handleLangChange = () => english ? setLanguage(false) : setLanguage(true)
 
   // handling button click - asynchronously fetching data from api url using city from input
   const handleBtnClick = async (event) => {
@@ -54,17 +56,43 @@ const App = () => {
     setDataObject({})
   }
 
+  // TODO: theme changing
+  const [theme, setTheme] = useState(false)
+  const handleThemeChange = () => !theme ? setTheme(true) : setTheme(false)
+  if (theme) document.getElementById('body').setAttribute('id', 'dark')
+  else {
+    document.getElementById('body').removeAttribute('id', 'dark')
+    document.getElementById('body').setAttribute('id', 'bright')
+  }
+
   return (
     <div className='content-wrapper'>
-      <h1>Weather</h1>
+      <div className='top-wrapper'>
+        {english &&
+          <>
+            <h1>Weather</h1>
+            <button className='lang-btn theme-btn' onClick={handleThemeChange}>{theme ? 'Dark' : 'Bright'}</button>
+            {Object.keys(dataObject).length === 0 && <button className='lang-btn' onClick={handleLangChange}>Русский</button>}
+          </>
+        }
+        {!english &&
+          <>
+            <h1>Погода</h1>
+            {Object.keys(dataObject).length === 0 && <button className='lang-btn' onClick={handleLangChange}>English</button>}
+          </>
+        }
+      </div>
+
       <div className='input-wrapper'>
         {english && Object.keys(dataObject).length === 0 && <h2>Enter your city</h2>}
         {!english && Object.keys(dataObject).length === 0 && <h2>Введите Ваш город</h2>}
-        {Object.keys(dataObject).length === 0 && 
+
+        {Object.keys(dataObject).length === 0 &&
           <form onSubmit={handleBtnClick}>
             <input value={cityInput} onChange={handleCityChange}></input>
           </form>
         }
+
         {cityInput && english &&
           <div className='input-button-group'>
             {Object.keys(dataObject).length === 0 &&
