@@ -2,8 +2,6 @@ import './App.css'
 import { useState } from 'react'
 import HourForecast from './components/HourForecast'
 import CityInformation from './components/CityInformation'
-const gb = require('./img/gb.png')
-const rus = require('./img/rus.png')
 
 const App = () => {
   // creating object of city information and city for input
@@ -56,22 +54,12 @@ const App = () => {
     setDataObject({})
   }
 
-  // TODO: theme changing
-  const [theme, setTheme] = useState(false)
-  const handleThemeChange = () => !theme ? setTheme(true) : setTheme(false)
-  if (theme) document.getElementById('body').setAttribute('id', 'dark')
-  else {
-    document.getElementById('body').removeAttribute('id', 'dark')
-    document.getElementById('body').setAttribute('id', 'bright')
-  }
-
   return (
     <div className='content-wrapper'>
       <div className='top-wrapper'>
         {english &&
           <>
             <h1>Weather</h1>
-            <button className='lang-btn theme-btn' onClick={handleThemeChange}>{theme ? 'Dark' : 'Bright'}</button>
             {Object.keys(dataObject).length === 0 && <button className='lang-btn' onClick={handleLangChange}>Русский</button>}
           </>
         }
@@ -121,8 +109,8 @@ const App = () => {
       {Object.keys(dataObject).length !== 0 &&
         <div className='city-info-wrapper'>
           {/* <pre>{JSON.stringify(dataObject, null, 3)}</pre> */}
-          <CityInformation dataObject={dataObject} cityInput={cityInput} />
-          <HourForecast dataObject={dataObject} />
+          <CityInformation dataObject={dataObject} cityInput={cityInput} english={english} />
+          <HourForecast dataObject={dataObject} english={english} />
         </div>
       }
     </div>
