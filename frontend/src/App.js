@@ -17,13 +17,13 @@ const App = () => {
     try {
       event.preventDefault()
       const newCity = { cityInput }
-      await fetch('http://127.0.0.1:4242/api/v1/getCityInput', {
+      await fetch('https://blue-fine-cormorant.cyclic.app/api/v1/getCityInput', {
         method: 'POST',
         headers: { 'Content-Type': 'application/JSON' },
         body: JSON.stringify(newCity)
       })
 
-      const response = await fetch('http://127.0.0.1:4242/api/v1/getForecast', {
+      const response = await fetch('https://blue-fine-cormorant.cyclic.app/api/v1/getForecast', {
         method: 'GET',
         headers: {
           Accept: 'application/json',
