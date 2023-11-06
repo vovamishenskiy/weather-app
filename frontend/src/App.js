@@ -17,13 +17,13 @@ const App = () => {
     try {
       event.preventDefault()
       const newCity = { cityInput }
-      await fetch('http://127.0.0.1:4242/getCityInput', {
+      await fetch('http://127.0.0.1:4242/api/v1/getCityInput', {
         method: 'POST',
         headers: { 'Content-Type': 'application/JSON' },
         body: JSON.stringify(newCity)
       })
 
-      const response = await fetch('http://127.0.0.1:4242/getForecast', {
+      const response = await fetch('http://127.0.0.1:4242/api/v1/getForecast', {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -108,9 +108,8 @@ const App = () => {
       {/* checking if city information object has values and outputting it */}
       {Object.keys(dataObject).length !== 0 &&
         <div className='city-info-wrapper'>
-          {/* <pre>{JSON.stringify(dataObject, null, 3)}</pre> */}
-          <CityInformation dataObject={dataObject} cityInput={cityInput} english={english} />
           <HourForecast dataObject={dataObject} english={english} />
+          <CityInformation dataObject={dataObject} english={english} />
         </div>
       }
     </div>

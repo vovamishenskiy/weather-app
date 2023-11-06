@@ -11,3 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.swiper-button-prev:after, .swiper-button-next:after {
+  font-size: 24px!important;
+  font-weight: 600;
+}
+
+.swiper-slide {
+  width: auto!important;
+  margin-right: 10px;
+  padding-left: 44px;
+}

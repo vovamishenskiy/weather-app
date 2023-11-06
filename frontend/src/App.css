@@ -44,11 +44,11 @@ body {
 
 .lang-btn {
     position: fixed;
-    right: 1.5em;
+    right: 1.2em;
     top: 16px;
     background-color: #fff;
     border: 2px solid #eceaea;
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 0.5em 1em;
     color: #202020;
     font-weight: 600;
@@ -124,7 +124,7 @@ body {
 
 .info-card {
     border-radius: 16px;
-    min-width: 310px;
+    width: 310px;
     min-height: 55px;
     display: flex;
     align-items: center;
@@ -219,4 +219,40 @@ body {
     display: flex;
     flex-direction: row;
     gap: 5px;
+}
+
+/* adaptive */
+
+@media screen and (max-width: 767px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+        display: none!important;
+    }
+
+    .swiper-slide {
+        padding: 0!important;
+    }
+
+    .content-wrapper {
+        width: auto;
+        overflow-x: hidden;
+    }
+
+    .styled-city-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .info-card,
+    .swiper {
+        width: clamp(200px, 250px, 300px);
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .content-wrapper {
+        width: auto;
+        overflow-x: hidden;
+    }
 }

@@ -9,13 +9,13 @@ app.use(cors())
 
 // creating city variable to store value from frontend city input, then pass it to /getForecast
 let city
-app.post('/getCityInput', jsonParser, (req, res) => {
+app.post('/api/v1/getCityInput', jsonParser, (req, res) => {
     city = req.body
     res.send(city)
 })
 
 // creating api request, using base url, api key and city value from /getCityInput
-app.get('/getForecast', async (req, res) => {
+app.get('/api/v1/getForecast', async (req, res) => {
     const baseUrl = `${process.env.BASE_URL}/forecast.json?key=${process.env.KEY}&q=${JSON.stringify(city)}}`
     const options = { method: 'GET' }
 
